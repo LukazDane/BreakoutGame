@@ -5,6 +5,7 @@ import Ball from './Ball.js';
 import Brick from './Brick.js';
 import Bricks from './Bricks.js';
 import Paddle from './Paddle.js';
+import GameLabel from './GameLabel.js';
 // import Game from './Game.js';
 // import Lives from './Lives.js';
 // import Paddle from './Paddle.js';
@@ -29,14 +30,8 @@ const PI2 = Math.PI * 2;
 const baseColour = '#0095DD';
 const gameOverMessage = 'Game Over';
 
-const bricks = new Bricks(brickColumnCount, brickRowCount);
-const ball = new Ball(0, 0, 2, -2, 'red');
-const paddle = new Paddle(paddleXStart, paddleYStart, paddleWidth, paddleHeight);
 
 resetBAP();
-
-let score = 0;
-let lives = 3;
 
 let rightPressed = false;
 let leftPressed = false;
@@ -50,8 +45,10 @@ function collisionDetection() {
         if (ball.x > brick.x && ball.x < brick.x + brickWidth && ball.y > brick.y && ball.y < brick.y + brickHeight) {
           ball.dy = -ball.dy;
           brick.status = 0;
-          score += 1;
-          if (score === bricks.cols * bricks.rows
+
+          scoreLabel.value += 1;
+
+          if (scoreLabel.value === bricks.cols * bricks.rows
           ) {
             alert('YOU WIN, CONGRATS!');
             document.location.reload();
@@ -60,18 +57,6 @@ function collisionDetection() {
       }
     }
   }
-}
-
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = baseColour;
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-
-function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = baseColour;
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
 function resetBAP() {
@@ -93,9 +78,9 @@ function collisionWCAP() {
     if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
       ball.dy = -ball.dy;
     } else {
-      lives -= 1;
+      livesLabel.value -= 1;
       resetBAP();
-    } if (!lives) {
+    } if (livesLabel.value < 1) {
       alert(gameOverMessage);
       ball.x = 200;
       ball.y = 200;
@@ -119,8 +104,8 @@ function draw() {
   bricks.render(ctx);
   ball.render(ctx);
   paddle.render(ctx);
-  drawScore();
-  drawLives();
+  scoreLabel.render(ctx);
+  livesLabel.render(ctx);
   collisionDetection();
   ball.move();
   collisionWCAP();
