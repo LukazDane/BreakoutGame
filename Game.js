@@ -2,7 +2,7 @@
 /* eslint-disable no-alert */
 import Bricks from './Bricks.js';
 import Ball from './Ball.js';
-import Paddle from './Paddle.js';
+import Sprite from './Sprite.js';
 import GameLabel from './GameLabel.js';
 
 class Game {
@@ -33,8 +33,8 @@ class Game {
       offSetTop: 30,
       colour: this.baseColour,
     });
-    this.ball = new Ball(0, 0, 2, -2, 'red');
-    this.paddle = new Paddle(this.paddleXStart, this.paddleYStart, this.paddleWidth,
+    this.ball = new Ball(0, 0, 2, -2, '0095DD');
+    this.paddle = new Sprite(this.paddleXStart, this.paddleYStart, this.paddleWidth,
       this.paddleHeight);
 
     this.scoreLabel = new GameLabel('Score: ', 8, 20);
