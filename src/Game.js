@@ -1,5 +1,5 @@
-/* eslint-disable import/extensions */
 /* eslint-disable no-alert */
+/* eslint-disable import/extensions */
 import Bricks from './Bricks.js';
 import Ball from './Ball.js';
 import Sprite from './Sprite.js';
