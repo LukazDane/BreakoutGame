@@ -1,16 +1,21 @@
 /* eslint-disable import/extensions */
 import Brick from './Brick.js';
 
-const brickWidth = 75 / 2;
-const brickHeight = 20;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
 class Bricks {
-  constructor(cols, rows) {
+  constructor(options) {
+    const {
+      cols, rows, width, height, padding, offSetLeft, offSetTop, colour,
+    } = options;
     this.cols = cols;
     this.rows = rows;
     this.bricks = [];
+    this.width = width;
+    this.height = height;
+    this.padding = padding;
+    this.offSetLeft = offSetLeft;
+    this.offSetTop = offSetTop;
+    this.colour = colour;
+
     this.init();
   }
 
@@ -18,9 +23,9 @@ class Bricks {
     for (let c = 0; c < this.cols; c += 1) {
       this.bricks[c] = [];
       for (let r = 0; r < this.rows; r += 1) {
-        const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
-        const brickY = (c * (brickHeight + brickPadding)) + brickOffsetTop;
-        this.bricks[c][r] = new Brick(brickX, brickY, brickWidth, brickHeight);
+        const brickX = (r * (this.width + this.padding)) + this.offSetLeft;
+        const brickY = (c * (this.height + this.padding)) + this.offSetTop;
+        this.bricks[c][r] = new Brick(brickX, brickY, this.width, this.height, this.colour);
       }
     }
   }

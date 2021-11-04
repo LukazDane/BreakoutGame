@@ -10,6 +10,7 @@ class Ball extends Sprite {
     this.dx = 2;
     this.dy = -2;
     this.colour = colour;
+    this.PI2 = Math.PI * 2;
   }
 
   move() {
@@ -19,7 +20,7 @@ class Ball extends Sprite {
 
   render(ctx) {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.radius, 0, this.PI2);
     ctx.fillStyle = this.colour;
     ctx.fill();
     ctx.closePath();

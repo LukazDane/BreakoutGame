@@ -5,33 +5,40 @@ import Ball from './Ball.js';
 import Paddle from './Paddle.js';
 import GameLabel from './GameLabel.js';
 
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
-
-// const ballRadius = 10;
-const paddleHeight = 10;
-const paddleWidth = 75;
-const brickRowCount = 9;
-const brickColumnCount = 4;
-const brickWidth = 75 / 2;
-const brickHeight = 20;
-// const brickPadding = 10;
-// const brickOffsetTop = 30;
-// const brickOffsetLeft = 30;
-const paddleXStart = (canvas.width - paddleWidth) / 2;
-const paddleYStart = canvas.height - paddleHeight;
-// const PI2 = Math.PI * 2;
-const baseColour = '#0095DD';
-const gameOverMessage = 'Game Over';
-
 class Game {
-  constructor() {
-    this.bricks = new Bricks(brickColumnCount, brickRowCount);
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    // ---------------------------------------------------- //
+    this.ballRadius = 10;
+    this.paddleHeight = 10;
+    this.paddleWidth = 75;
+    this.brickRowCount = 9;
+    this.brickColumnCount = 4;
+    this.brickHeight = 20;
+    this.brickWidth = 37.5;
+    this.paddleXStart = (this.canvas.width - this.paddleWidth) / 2;
+    this.paddleYStart = this.canvas.height - this.paddleHeight;
+    this.PI2 = Math.PI * 2;
+    this.baseColour = ('#0095DD');
+    this.gameOverMessage = 'Game Over';
+    // ---------------------------------------------------- //
+    this.bricks = new Bricks({
+      cols: this.brickColumnCount,
+      rows: this.brickRowCount,
+      width: 37.5,
+      height: 20,
+      padding: 10,
+      offSetLeft: 30,
+      offSetTop: 30,
+      colour: this.baseColour,
+    });
     this.ball = new Ball(0, 0, 2, -2, 'red');
-    this.paddle = new Paddle(paddleXStart, paddleYStart, paddleWidth, paddleHeight);
+    this.paddle = new Paddle(this.paddleXStart, this.paddleYStart, this.paddleWidth,
+      this.paddleHeight);
 
     this.scoreLabel = new GameLabel('Score: ', 8, 20);
-    this.livesLabel = new GameLabel('Lives: ', canvas.width - 65, 20, baseColour, 3);
+    this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20, this.baseColour, 3);
 
     this.rightPressed = false;
     this.leftPressed = false;
@@ -55,11 +62,11 @@ class Game {
   }
 
   resetBAP() {
-    this.ball.x = canvas.width / 2;
-    this.ball.y = canvas.height - 30;
+    this.ball.x = this.canvas.width / 2;
+    this.ball.y = this.canvas.height - 30;
     this.ball.dx = 2;
     this.ball.dy = -2;
-    this.paddle.x = paddleXStart;
+    this.paddle.x = this.paddleXStart;
   }
 
   collisionDetection() {
@@ -68,7 +75,7 @@ class Game {
         const brick = this.bricks.bricks[c][r];
         if (brick.status === 1) {
           // eslint-disable-next-line max-len
-          if (this.ball.x > brick.x && this.ball.x < brick.x + brickWidth && this.ball.y > brick.y && this.ball.y < brick.y + brickHeight) {
+          if (this.ball.x > brick.x && this.ball.x < brick.x + this.brickWidth && this.ball.y > brick.y && this.ball.y < brick.y + this.brickHeight) {
             this.ball.dy = -this.ball.dy;
             brick.status = 0;
 
@@ -86,7 +93,7 @@ class Game {
   }
 
   movePaddle() {
-    if (this.rightPressed && this.paddle.x < canvas.width - this.paddle.width) {
+    if (this.rightPressed && this.paddle.x < this.canvas.width - this.paddle.width) {
       this.paddle.moveBy(7, 0);
     } else if (this.leftPressed && this.paddle.x > 0) {
       this.paddle.moveBy(-7, 0);
@@ -94,21 +101,21 @@ class Game {
   }
 
   collisionWCAP() {
-    if (this.ball.x + this.ball.dx > canvas.width - this.ball.radius
+    if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius
       || this.ball.x + this.ball.dx < this.ball.radius) {
       this.ball.dx = -this.ball.dx;
     }
 
     if (this.ball.y + this.ball.dy < this.ball.radius) {
       this.ball.dy = -this.ball.dy;
-    } else if (this.ball.y + this.ball.dy > canvas.height - this.ball.radius) {
+    } else if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius) {
       if (this.ball.x > this.paddle.x && this.ball.x < this.paddle.x + this.paddle.width) {
         this.ball.dy = -this.ball.dy;
       } else {
         this.livesLabel.value -= 1;
         this.resetBAP();
       } if (this.livesLabel.value < 1) {
-        alert(gameOverMessage);
+        alert(this.gameOverMessage);
         this.ball.x = 200;
         this.ball.y = 200;
         document.location.reload();
@@ -135,22 +142,22 @@ class Game {
   }
 
   mouseMoveHandler(e) {
-    const relativeX = e.clientX - canvas.offsetLeft;
-    if (this.relativeX > 0 && relativeX < canvas.width) {
-      this.paddle.moveTo(relativeX - this.paddle.width / 2, paddleYStart);
+    const relativeX = e.clientX - this.canvas.offsetLeft;
+    if (this.relativeX > 0 && relativeX < this.canvas.width) {
+      this.paddle.moveTo(relativeX - this.paddle.width / 2, this.paddleYStart);
     }
   }
 
   draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.bricks.render(ctx);
-    this.ball.render(ctx);
-    this.paddle.render(ctx);
-    this.scoreLabel.render(ctx);
-    this.livesLabel.render(ctx);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.bricks.render(this.ctx);
+    this.ball.render(this.ctx);
+    this.paddle.render(this.ctx);
+    this.scoreLabel.render(this.ctx);
+    this.livesLabel.render(this.ctx);
     this.collisionDetection();
-    this.ball.move();
     this.collisionWCAP();
+    this.ball.move();
     this.movePaddle();
 
     requestAnimationFrame(() => {
